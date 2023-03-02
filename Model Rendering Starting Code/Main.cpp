@@ -88,11 +88,81 @@ void display() {
     //  Clear screen and Z-buffer
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    // ------------------------------------------------------
+    // PROJECTION MATRIX
+    //-------------------------------------------------------
+    // Setup projection matrix
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+
+    // Clipping planes, used for both Ortho and Perspective
+    float clipNear = 0.1f;
+    float clipFar = 100.0f;
+
+    // Orthographic view - no perspective
+    // straight field of view/tunnel vision
+    float orthoLeft = -1.0f;
+    float orthoRight = 1.0f;
+    float orthoTop = 1.0f;
+    float orthoBottom = -1.0f;
+
+    //glOrtho(orthoLeft, orthoRight, orthoBottom, orthoTop, 
+    //  clipNear, clipFar);
+
+    // Perspective view , different view based on camera position
+    // views wider field of view
+    float fov = 90.0f;
+    float aspectRatio = windowWidth / windowHeight;
+    gluPerspective(fov, aspectRatio, clipNear, clipFar);
+
+
+    // ------------------------------------------------------
+    // VIEW AND MODEL MATRICES COMBINED
+    //-------------------------------------------------------
+    // Setup the matrix to be edited
+    glMatrixMode(GL_MODELVIEW);
+
 
     // Reset the matrix
     glLoadIdentity();
 
+    // ------------------------------------------------------
+    // VIEW TRANSFORMS  
+    // ------------------------------------------------------
+    // Camera position
+    float cameraX = 0.0f;
+    float cameraY = 0.0f;
+    float cameraZ = -1.0f;
 
+    // Looking at position
+    float lookX = 0.0f;
+    float lookY = 0.0f;
+    float lookZ = 0.0f;
+
+    // Up matrix positon
+    float upX = 0.0f;
+    float upY = 1.0f;
+    float upZ = 0.0f;
+
+    gluLookAt(cameraX, cameraY, cameraZ,
+        lookX, lookY, lookZ,
+        upX, upY, upZ);
+
+
+    // ------------------------------------------------------
+    // MODEL TRANSFORMS | TRS | Translate, Rotate, Scale
+    // ------------------------------------------------------
+
+    // Translate to set location
+    glTranslatef(0.0f, 0.0f, 0.0f);
+
+    // Rotate tp the correct angles
+    glRotatef(rotate_y, 0.0f, 1.0f, 0.0f); //yaw, y axis
+    glRotatef(rotate_x, 1.0f, 0.0f, 0.0f); //pitch, x axis
+    glRotatef(0, 0.0f, 1.0f, 1.0f); //roll, z axis
+
+    // Scale to desired dimensions
+    glScalef(1.0f, 1.0f, 1.0f);
 
     // MODEL - draw the cube
     drawCube();
